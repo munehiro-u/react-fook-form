@@ -3,7 +3,11 @@ import "./styles.css";
 
 export default function App() {
   /* useFormから関数をimport */
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
   const onSubmit = (data) => console.log("onSubmit:", data);
 
@@ -11,11 +15,16 @@ export default function App() {
     /* handleSubmitはフォームの入力内容を検証したうえで、引数に渡した関数(onSubmit)を実行 */
     <form onSubmit={handleSubmit(onSubmit)}>
       <label>First Name</label>
-      <input {...register("firstName")} />
+      {/* register関数の第2引数にバリデーションのルールを追加 */}
+      <input {...register("firstName", { maxLength: 15 })} />
+      {/* errorsと登録したname属性を使用して、エラーメッセージを記述 */}
+      {errors.firstName && <p>15文字以内で入力してください</p>}
       <label>Last Name</label>
-      <input {...register("lastName")} />
+      <input {...register("lastName", { maxLength: 15 })} />
+      {errors.lastName && <p>15文字以内で入力してください</p>}
       <label>Email</label>
-      <input {...register("email")} />
+      <input {...register("email", { required: true })} />
+      {errors.email && <p>メールアドレスは必須です</p>}
       <input type="submit" value="submit" />
     </form>
   );
